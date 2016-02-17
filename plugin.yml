@@ -1,0 +1,10 @@
+name: SpecialTools
+main: com.bigbrainiac10.specialtools.SpecialTools
+version: 1.0
+author: bigbrainiac10
+description: Adds lots of Special Tools.
+depend: [Citadel, NameLayer]
+commands:
+   stpickaxe:
+      description: Give a pickaxe
+      usage: /stpickaxe

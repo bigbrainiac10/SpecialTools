@@ -1,0 +1,6 @@
+drill:
+ debug_command_enabled: true
+ title: "&bDiamond Drill"
+ lore:
+  - "&b&lDiamond Drill"
+  - "&fDig down to dig a large area"
