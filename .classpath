@@ -2,13 +2,9 @@
 <classpath>
 	<classpathentry kind="src" path="src"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER/org.eclipse.jdt.internal.debug.ui.launcher.StandardVMType/JavaSE-1.8"/>
-	<classpathentry kind="lib" path="C:/Users/Aidan/Desktop/Programming/External Jars/spigot-1.8.8.jar">
-		<attributes>
-			<attribute name="javadoc_location" value="https://hub.spigotmc.org/javadocs/spigot/"/>
-		</attributes>
-	</classpathentry>
-	<classpathentry kind="lib" path="C:/Users/Aidan/Desktop/Programming/External Jars/Citadel-3.2.9-2.jar"/>
-	<classpathentry kind="lib" path="C:/Users/Aidan/Desktop/Programming/External Jars/Humbug.1.7.2.jar"/>
-	<classpathentry kind="lib" path="C:/Users/Aidan/Desktop/Programming/External Jars/NameLayer-2.5.42.jar"/>
+	<classpathentry kind="lib" path="C:/Users/Aidan/Desktop/Programming/Resources/Citadel-3.4.39.jar"/>
+	<classpathentry kind="lib" path="C:/Users/Aidan/Desktop/Programming/Resources/Humbug.1.7.3.jar"/>
+	<classpathentry kind="lib" path="C:/Users/Aidan/Desktop/Programming/Resources/NameLayer-2.5.43.jar"/>
+	<classpathentry kind="lib" path="C:/Users/Aidan/Desktop/Programming/Resources/spigot-1.8.8.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

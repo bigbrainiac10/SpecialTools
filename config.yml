@@ -1,6 +1,14 @@
+dev:
+ enabled: true
 drill:
- debug_command_enabled: true
- title: "&bDiamond Drill"
+ title: "&b&lDiamond Drill"
  lore:
-  - "&b&lDiamond Drill"
+  - "&bDiamond Drill"
   - "&fDig down to dig a large area"
+  - "&f&o3x3 area of effect"
+hoe:
+ title: "&b&lIndustrial Hoe"
+ lore:
+  - "&bIndustrial Hoe"
+  - "&fHoe dirt to hoe a large area"
+  - "&f&o3x3 area of effect"

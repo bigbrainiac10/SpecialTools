@@ -35,7 +35,12 @@ public class InventoryListener implements Listener {
 		if(!meta.hasLore())
 			return;
 		
-		if((Utility.colorToSafe(meta.getLore().get(0)).equalsIgnoreCase(STConfigManager.getSTPickaxeLore().get(0)))){
+		if((Utility.colorToSafe(meta.getLore().get(0)).equalsIgnoreCase(STConfigManager.getToolLore("drill").get(0)))){
+			event.setResult(Result.DENY);
+			event.setCancelled(true);
+		}
+		
+		if((Utility.colorToSafe(meta.getLore().get(0)).equalsIgnoreCase(STConfigManager.getToolLore("hoe").get(0)))){
 			event.setResult(Result.DENY);
 			event.setCancelled(true);
 		}

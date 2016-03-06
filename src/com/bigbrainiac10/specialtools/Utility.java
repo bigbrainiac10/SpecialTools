@@ -8,12 +8,12 @@ import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
+import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.meta.ItemMeta;
 
 public class Utility {
-
-	//Location loc = player.getLocation().clone().add(0.0, -1.0, 0.0);
 	 
-	public static List<Block> getDrillAOE(Location center, int radius) {
+	public static List<Block> getAOE(Location center, int radius, boolean includeCentre) {
 		List<Block> blocksAOE = new ArrayList<Block>();
 		
 	    for (int xMod = -radius; xMod <= radius; xMod++) {
@@ -23,12 +23,7 @@ public class Utility {
 	            if(theBlock.getType().equals(Material.BEDROCK))
 	            	continue;
 	            
-	            /*
-	            if(theBlock.getLocation() == center)
-	            	continue;
-	            */
-	            
-	            if(xMod == 0 && zMod == 0)
+	            if((!includeCentre) && (xMod == 0 && zMod == 0))
 	            	continue;
 	            
 	            blocksAOE.add(theBlock);
@@ -55,26 +50,29 @@ public class Utility {
 		return str.replace(ChatColor.COLOR_CHAR, '&');
 	}
 	
-	/*
-	public static List<Block> getDrillAOE(Location center, int radius, ItemStack item) {
-		List<Block> blocksAOE = new ArrayList<Block>();
+	public static List<String> createLore(List<String> toolLoreRaw){
+		List<String> toolLore = new ArrayList<String>();
 		
-	    for (int xMod = -radius; xMod <= radius; xMod++) {
-	        for (int zMod = -radius; zMod <= radius; zMod++) {
-	            Block theBlock = center.getBlock().getRelative(xMod, 0, zMod);
-	            
-	            if(theBlock.getType().equals(Material.BEDROCK))
-	            	continue;
-	            
-	            if((!item.getType().equals(Material.DIAMOND_PICKAXE)) && (theBlock.getType().equals(Material.OBSIDIAN)))
-	            	continue;
-	            
-	            blocksAOE.add(theBlock);
-	        }
-	    }
-	    
-	    return blocksAOE;
+		for(String line : toolLoreRaw){
+			toolLore.add(Utility.safeToColor(line));
+		}
+		
+		return toolLore;
 	}
-	*/
+	
+	public static boolean toolCheck(ItemStack item, String toolName){
+		ItemMeta meta = item.getItemMeta();
+		
+		if(meta == null)
+			return false;
+		
+		if(!meta.hasLore())
+			return false;
+		
+		if(!(colorToSafe(meta.getLore().get(0)).equalsIgnoreCase(STConfigManager.getToolLore(toolName).get(0))))
+			return false;
+		
+		return true;
+	}
 	
 }

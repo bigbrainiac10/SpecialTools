@@ -1,18 +1,21 @@
 package com.bigbrainiac10.specialtools.listeners;
 
 import java.util.List;
+
+import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
+import org.bukkit.event.block.Action;
 import org.bukkit.event.block.BlockBreakEvent;
+import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.inventory.ItemStack;
-import org.bukkit.inventory.meta.ItemMeta;
+import org.bukkit.potion.PotionEffect;
+import org.bukkit.potion.PotionEffectType;
 
-import com.bigbrainiac10.specialtools.STConfigManager;
-import com.bigbrainiac10.specialtools.SpecialTools;
 import com.bigbrainiac10.specialtools.Utility;
 
 import vg.civcraft.mc.citadel.Citadel;
@@ -23,39 +26,88 @@ public class BlockListener implements Listener {
 	
 	private ReinforcementManager rm = Citadel.getReinforcementManager();
 	
-	/*
 	@EventHandler(priority = EventPriority.NORMAL)
-	public void playerInteract(PlayerInteractEvent event){
+	public void onHoe(PlayerInteractEvent event){
+		Block clickedBlock = event.getClickedBlock();
+		Player player = event.getPlayer();
+		ItemStack handItem = player.getItemInHand();
 		
 		if(!event.getAction().equals(Action.RIGHT_CLICK_BLOCK))
 			return;
 		
-		Block clickedBlock = event.getClickedBlock();
+		if(!clickedBlock.getType().isSolid())
+			return;
 		
-		SpecialTools.Log(event.getBlockFace().toString());
+		Material clickedBlockMaterial = clickedBlock.getType();
 		
-		if(event.getBlockFace() == BlockFace.UP){
-			
-			if(event.getPlayer().isSneaking()){
+		if(!(clickedBlockMaterial.equals(Material.DIRT) || clickedBlockMaterial.equals(Material.GRASS) || clickedBlockMaterial.equals(Material.MYCEL) || clickedBlockMaterial.equals(Material.SOIL)))
+			return;
+		
+		if(player.getItemInHand() == null)
+			return;
+		
+		if(!Utility.toolCheck(handItem, "hoe"))
+			return;
+		
+		if(event.getBlockFace().equals(BlockFace.UP)){
+			if(player.isSneaking()){
+				if(rm.isReinforced(clickedBlock))
+					return;
 				
-				clickedBlock.breakNaturally();
-				
+				clickedBlock.setType(Material.SOIL);
 			}else{
-			
-				List<Block> blocksAOE = Utility.getAOE(clickedBlock.getLocation(), 1);
+				List<Block> blocksAOE = Utility.getAOE(clickedBlock.getLocation(), 1, true);
 				
-				for(int i=0; i<blocksAOE.size(); i++){
-					blocksAOE.get(i).breakNaturally();
-					//blocksAOE.get(i).setType(STConfigManager.getReplaceMaterial());
+				for(Block block : blocksAOE){
+					
+					Material blockMat = block.getType();
+					
+					if(rm.isReinforced(block))
+						continue;
+					
+					if(!(blockMat.equals(Material.DIRT) || blockMat.equals(Material.GRASS) || blockMat.equals(Material.MYCEL)))
+						continue;
+					
+					if(block.equals(Material.AIR))
+						continue;
+					
+					Block blockRel = block.getRelative(0, 1, 0);
+					
+					if(!(blockRel.getType().equals(Material.AIR)))
+						continue;
+					
+					block.setType(Material.SOIL);
 				}
 			}
 		}
-		
 	}
-	*/
 	
 	@EventHandler(priority = EventPriority.NORMAL, ignoreCancelled=false)
-	public void onBlockBreak(BlockBreakEvent event){
+	public void onPickaxeInteract(PlayerInteractEvent event){
+		Block clickedBlock = event.getClickedBlock();
+		Player player = event.getPlayer();
+		ItemStack handItem = player.getItemInHand();
+		
+		if(!event.getAction().equals(Action.LEFT_CLICK_BLOCK))
+			return;
+
+		Material clickedBlockMaterial = clickedBlock.getType();
+		
+		if(!(clickedBlockMaterial.equals(Material.DIRT) || clickedBlockMaterial.equals(Material.SAND) || clickedBlockMaterial.equals(Material.GRAVEL) || clickedBlockMaterial.equals(Material.GRASS) || clickedBlockMaterial.equals(Material.MYCEL)))
+			return;
+		
+		if(handItem == null)
+			return;
+		
+		if(!Utility.toolCheck(handItem, "drill"))
+			return;
+		
+		player.addPotionEffect(new PotionEffect(PotionEffectType.FAST_DIGGING, 10, 10, false, false));
+		
+	}
+	
+	@EventHandler(priority = EventPriority.NORMAL, ignoreCancelled=false)
+	public void onPickaxeBreak(BlockBreakEvent event){
 		Block brokenBlock = event.getBlock();
 		Player player = event.getPlayer();
 		ItemStack handItem = player.getItemInHand();
@@ -66,54 +118,40 @@ public class BlockListener implements Listener {
 		if(player.getItemInHand() == null)
 			return;
 		
+		if(!Utility.toolCheck(handItem, "drill"))
+			return;
+		
 		BlockFace lookingFace = Utility.lookingDirectionVertical(player.getEyeLocation().getPitch());
-		
-		ItemMeta handItemMeta = handItem.getItemMeta();
-		
-		if(handItemMeta == null)
-			return;
-		
-		if(!handItemMeta.hasLore())
-			return;
-		
-		//SpecialTools.Log("Tool title: " + Utility.colorToSafe(handItemMeta.getLore().get(0)));
-		
-		if(!(Utility.colorToSafe(handItemMeta.getLore().get(0)).equalsIgnoreCase(STConfigManager.getSTPickaxeLore().get(0))))
-			return;
 		
 		if(lookingFace == BlockFace.UP){
 			
 			if(player.isSneaking()){
-				//brokenBlock.breakNaturally(handItem);
 				BlockBreakEvent newEvent = new BlockBreakEvent(brokenBlock, player);
-				//SpecialTools.instance.getServer().getPluginManager().callEvent(newEvent);
+				
 				if(!newEvent.isCancelled()){
 					brokenBlock.breakNaturally(handItem);
 				}
-					
-				//SpecialTools.instance.getServer().getPluginManager().callEvent(newEvent);
 			}else{
 			
-				List<Block> blocksAOE = Utility.getDrillAOE(brokenBlock.getLocation(), 1);
+				List<Block> blocksAOE = Utility.getAOE(brokenBlock.getLocation(), 1, true);
 				
 				for(Block block : blocksAOE){
-					//block.breakNaturally(handItem);
 					
 					
 					BlockBreakEvent newEvent = new BlockBreakEvent(block, player);
-					//SpecialTools.instance.getServer().getPluginManager().callEvent(newEvent);
+					
 					if(!newEvent.isCancelled()){
 						
 						if(rm.isReinforced(block)){
 							Reinforcement rt = rm.getReinforcement(block);
 							rt.setDurability(rt.getDurability()-1);
+							
+							if(rt.getDurability() <= 0)
+								block.breakNaturally(handItem);
 						}else{
 							block.breakNaturally(handItem);
 						}
 					}
-					SpecialTools.Log("X: " + newEvent.getBlock().getX() + " | Y: " + newEvent.getBlock().getY() + " | Z: " +newEvent.getBlock().getZ());
-						
-					//SpecialTools.instance.getServer().getPluginManager().callEvent(newEvent);
 				}
 			}
 		}

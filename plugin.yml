@@ -6,5 +6,8 @@ description: Adds lots of Special Tools.
 depend: [Citadel, NameLayer]
 commands:
    stpickaxe:
-      description: Give a pickaxe
+      description: Give a drill
       usage: /stpickaxe
+   sthoe:
+      description: Give a hoe
+      usage: /sthoe

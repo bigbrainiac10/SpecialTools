@@ -5,9 +5,11 @@ import java.util.logging.Logger;
 
 import org.bukkit.plugin.java.JavaPlugin;
 
-import com.bigbrainiac10.specialtools.commands.STPickaxe;
+import com.bigbrainiac10.specialtools.commands.ToolCommand;
 import com.bigbrainiac10.specialtools.listeners.BlockListener;
 import com.bigbrainiac10.specialtools.listeners.InventoryListener;
+import com.bigbrainiac10.specialtools.tools.DiamondDrill;
+import com.bigbrainiac10.specialtools.tools.IndustrialHoe;
 
 
 public class SpecialTools extends JavaPlugin {
@@ -40,9 +42,9 @@ public class SpecialTools extends JavaPlugin {
 	}
 	
 	private static void registerCommands(){
-		if(STConfigManager.getSTPickaxeCommandEnabled()){
-			instance.getCommand("stpickaxe").setExecutor(new STPickaxe());
-		}
+		//instance.getCommand("stpickaxe").setExecutor(new STPickaxe());
+		instance.getCommand("stpickaxe").setExecutor(new ToolCommand("stpickaxe", new DiamondDrill()));
+		instance.getCommand("sthoe").setExecutor(new ToolCommand("sthoe", new IndustrialHoe()));
 	}
 	
 }
